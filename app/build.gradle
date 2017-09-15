@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 sourceSets {
@@ -42,16 +46,11 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofit_version"
     compile "com.squareup.retrofit2:converter-gson:$retrofit_version"
     compile "com.github.bumptech.glide:glide:$glide_version"
-
     compile "com.android.support.constraint:constraint-layout:$constraint_layout_version"
-
     compile "com.jakewharton.timber:timber:$timber_version"
-
     annotationProcessor "android.arch.persistence.room:compiler:$arch_version"
     annotationProcessor "android.arch.lifecycle:compiler:$arch_version"
-
     compile "com.squareup.okhttp3:logging-interceptor:$okhttp_logging"
-
     testCompile "junit:junit:$junit_version"
     testCompile "com.squareup.okhttp3:mockwebserver:$mockwebserver_version"
     testCompile("android.arch.core:core-testing:$arch_version", {
@@ -59,12 +58,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.android.support', module: 'support-core-utils'
     })
-
     androidTestCompile "com.android.support:appcompat-v7:$support_version"
     androidTestCompile "com.android.support:recyclerview-v7:$support_version"
     androidTestCompile "com.android.support:support-v4:$support_version"
     androidTestCompile "com.android.support:design:$support_version"
-
     androidTestCompile("com.android.support.test.espresso:espresso-core:$espresso_version", {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
@@ -73,7 +70,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
-
     androidTestCompile("android.arch.core:core-testing:$arch_version", {
     })
     androidTestCompile "org.mockito:mockito-android:$mockito_version"

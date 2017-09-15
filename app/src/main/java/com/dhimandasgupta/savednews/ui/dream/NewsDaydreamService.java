@@ -32,7 +32,14 @@ import static com.dhimandasgupta.savednews.ui.activity.MainActivity.getIntentFro
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
 public class NewsDaydreamService extends DreamService {
-    private TypeWriterTextView textView;
+    private static final long DURATION = 20 * 1000;
+    private static final int DIM_HIGHEST = 0x30FFFFFF;
+    private static final int DIM_MODERATE = 0x70FFFFFF;
+    private static final int DIM_LOWEST = 0xA0FFFFFF;
+
+    private TypeWriterTextView titleTextView;
+    private View separatorView;
+    private TypeWriterTextView descriptionTextView;
 
     private List<ArticleEntity> articleEntities = new ArrayList<>();
 
@@ -46,10 +53,13 @@ public class NewsDaydreamService extends DreamService {
         public void run() {
             final ArticleEntity entity = getArticleEntity();
             if (entity != null) {
-                textView.setTag(entity);
-                textView.animateText(entity.getTitle());
+                titleTextView.setTag(entity);
+                titleTextView.animateText(entity.getTitle());
+
+                descriptionTextView.setTag(entity);
+                descriptionTextView.animateText(entity.getDescription());
             }
-            handler.postDelayed(runnable, 10 * 1000);
+            handler.postDelayed(runnable, DURATION);
         }
     };
 
@@ -57,14 +67,10 @@ public class NewsDaydreamService extends DreamService {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        // Exit dream upon user touch?
-        setInteractive(true);
+        setInteractive(true);   // Exit dream upon user touch?
+        setFullscreen(true);    // Hide system UI?
 
-        // Hide system UI?
-        setFullscreen(true);
-
-        // Set the content view, just like you would with an Activity.
-        setContentView(R.layout.daydream_news);
+        setContentView(R.layout.daydream_news); // Set the content view, just like you would with an Activity.
     }
 
     @Override
@@ -78,8 +84,9 @@ public class NewsDaydreamService extends DreamService {
 
         hideSystemUI();
 
-        textView = findViewById(R.id.dream_text_view);
-        textView.setOnClickListener(new View.OnClickListener() {
+        titleTextView = findViewById(R.id.dream_title_text_view);
+        dimView(titleTextView, DIM_LOWEST);
+        titleTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final ArticleEntity entity = (ArticleEntity) view.getTag();
@@ -89,7 +96,22 @@ public class NewsDaydreamService extends DreamService {
             }
         });
 
-        dimView(true, textView);
+        separatorView = findViewById(R.id.separator_view);
+        dimView(separatorView, DIM_HIGHEST);
+
+
+        descriptionTextView = findViewById(R.id.dream_description_text_view);
+        dimView(descriptionTextView, DIM_MODERATE);
+        descriptionTextView.setCharacterDelay(16);
+        descriptionTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ArticleEntity entity = (ArticleEntity) view.getTag();
+                startActivity(getIntentFromDayDream(view.getContext(), entity));
+
+                finish();
+            }
+        });
 
         articleLoadingAsyncTask = new ArticleLoadingAsyncTask(this);
         articleLoadingAsyncTask.execute();
@@ -124,17 +146,17 @@ public class NewsDaydreamService extends DreamService {
         }
     }
 
-    public void dimView(boolean dim, View clockView) {
-        Paint paint = new Paint();
+    // This dims a View with specified amount.
+    public void dimView(final View clockView, final int dimAmount) {
+        final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.WHITE);
-        paint.setColorFilter(new PorterDuffColorFilter(
-                (dim ? 0x60FFFFFF : 0xC0FFFFFF),
-                PorterDuff.Mode.MULTIPLY));
+        paint.setColorFilter(new PorterDuffColorFilter(dimAmount, PorterDuff.Mode.MULTIPLY));
         clockView.setLayerType(View.LAYER_TYPE_HARDWARE, paint);
     }
 
     public void setNewList(@Nullable List<ArticleEntity> articleEntities) {
-        this.articleEntities = articleEntities;
+        this.articleEntities.clear();
+        this.articleEntities.addAll(articleEntities);
 
         handler.post(runnable);
     }
