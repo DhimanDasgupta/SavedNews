@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/text_view_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="2dp"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:marqueeRepeatLimit="marquee_forever"
+            tools:text="@string/app_name"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/text_view_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:layout_marginBottom="2dp"
+            style="@style/TextAppearance.AppCompat.Body2"
+            tools:text="@string/app_name"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/text_view_published"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:layout_marginBottom="8dp"
+            style="@style/TextAppearance.AppCompat.Body1"
+            tools:text="@string/app_name"/>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
